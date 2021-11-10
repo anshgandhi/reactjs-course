@@ -9,17 +9,20 @@ const ExpenseForm = () => {
   });
 
   const titleChangeHandler = (event) => {
-    setUserInput({
-      ...userInput,
-      enteredTitle: event.target.value,
+    //setUserInput({
+    //  ...userInput,
+    //  enteredTitle: event.target.value,
+    //});
+    
+    // This is the rpreferred way to update state, when state depends on Previous State.
+    // has to do with how React manages states.
+    setUserInput((prevState) => {
+      return { ...prevState, enteredTitle: event.target.value};
     });
   };
 
   const amountChangeHandler = (event) => {
-    setUserInput({
-      ...userInput,
-      enteredAmount: event.target.value,
-    });
+    
   };
 
   const dateChangeHandler = (event) => {
