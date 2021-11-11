@@ -14,7 +14,7 @@ const ExpenseForm = () => {
     //  enteredTitle: event.target.value,
     //});
     
-    // This is the rpreferred way to update state, when state depends on Previous State.
+    // This is the preferred way to update state, when state depends on Previous State.
     // has to do with how React manages states.
     setUserInput((prevState) => {
       return { ...prevState, enteredTitle: event.target.value};
@@ -22,18 +22,29 @@ const ExpenseForm = () => {
   };
 
   const amountChangeHandler = (event) => {
-    
-  };
-
-  const dateChangeHandler = (event) => {
-    setUserInput({
-      ...userInput,
-      enteredDate: event.target.value,
+    setUserInput((prevState) => {
+      return {...prevState, enteredAmount: event.target.value}
     });
   };
 
+  const dateChangeHandler = (event) => {
+    setUserInput((prevState) => {
+      return {...userInput, enteredDate: new Date(event.target.value)}
+    });
+  };
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+    const expenseData = {
+      title : userInput.enteredTitle,
+      amount : userInput.enteredAmount,
+      date : userInput.enteredDate,
+    }
+    console.log(expenseData)
+  }
+
   return (
-    <form>
+    <form onSubmit={submitHandler}>
       <div className="new-expense__controls">
         <div className="new-expense__control">
           <label>Title</label>
