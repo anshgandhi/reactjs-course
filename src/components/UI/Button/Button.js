@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import './Button.css';
 
+// Styled Components are used to Limit Visibility of CSS Classes.
+// by default, CSS Classes would be visible globally. With Styled Components 
+// we get to Scope their Visibility.
+
 // 'button' is a special kind method on 'styled' object which is called using backticks.
 // this '``' is also called 'Tagged Template Literals'. JavScript feature.
 // 'styled' component has methods for all HTML elements. e.g. for <div>
