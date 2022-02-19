@@ -12,9 +12,22 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   useEffect(() => {
-    setFormIsValid(
-      enteredEmail.includes('@') && enteredPassword.trim().length > 6
-    );
+    const identifier = setTimeout(() => {
+      console.log("checking form validity... ");
+      setFormIsValid(
+        enteredEmail.includes('@') && enteredPassword.trim().length > 6
+      );
+    }, 500);
+
+    // 'debouncing', this returned function is called a cleanup function.
+    // runs before the useEffect is run 2nd time onwards, except for the first useEffect invocation.
+    return () => {
+      console.log("CLEANUP running... ");
+
+      // will essentially clear the lsat timer that was set.
+      // otherwise we end up getting too many events that are just delayed by 500 ms.
+      clearTimeout(identifier);
+    };
   }, [enteredEmail, enteredPassword])
 
   const emailChangeHandler = (event) => {
