@@ -41,24 +41,30 @@ const Login = (props) => {
   const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: undefined});
   const [passwordState, dispatchPassword] = useReducer(passswordReducer, { value: '', isValid: undefined});
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     console.log("checking form validity... ");
-  //     setFormIsValid(
-  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
-  //     );
-  //   }, 500);
+  // object de-structuring. i.e. emailIsValid = emailState.isValid
+  const { isValid:emailIsValid } = emailState;
+  const { isValid:passwordIsValid } = passwordState;
 
-  //   // 'debouncing', this returned function is called a cleanup function.
-  //   // runs before the useEffect is run 2nd time onwards, except for the first useEffect invocation.
-  //   return () => {
-  //     console.log("CLEANUP running... ");
+  // enabling 'useEffect' will make sure we do not check form validity for every change.
+  // if the field is already valid do not check for Form validity again.
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      console.log("checking form validity... ");
+      setFormIsValid(
+        emailState.isValid && passwordState.isValid
+      );
+    }, 500);
 
-  //     // will essentially clear the lsat timer that was set.
-  //     // otherwise we end up getting too many events that are just delayed by 500 ms.
-  //     clearTimeout(identifier);
-  //   };
-  // }, [enteredEmail, enteredPassword])
+    // 'debouncing', this returned function is called a cleanup function.
+    // runs before the useEffect is run 2nd time onwards, except for the first useEffect invocation.
+    return () => {
+      console.log("CLEANUP running... ");
+
+      // will essentially clear the lsat timer that was set.
+      // otherwise we end up getting too many events that are just delayed by 500 ms.
+      clearTimeout(identifier);
+    };
+  }, [emailState.isValid, passwordState.isValid])
 
   const emailChangeHandler = (event) => {
     // we've passed 'action' to 'dispatchEmail'
@@ -66,18 +72,18 @@ const Login = (props) => {
     // once 'dispatchEmail' runs, the state would be updated.
     dispatchEmail({type: 'USER_INPUT', val: event.target.value})
 
-    setFormIsValid(
-      passwordState.isValid && emailState.isValid
-    );
+    // setFormIsValid(
+    //   passwordState.isValid && emailState.isValid
+    // );
   };
 
   const passwordChangeHandler = (event) => {
     // setEnteredPassword(event.target.value);
     dispatchPassword({type: "USER_INPUT", val: event.target.value})
 
-    setFormIsValid(
-      passwordState.isValid && emailState.isValid
-    );
+    // setFormIsValid(
+    //   passwordState.isValid && emailState.isValid
+    // );
   };
 
   const validateEmailHandler = () => {
