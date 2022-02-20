@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
+import AuthContext from '../../store/auth-context';
 
 // we can create this outside the Component scope, because we will not be accessing 
 // any value inside the Reducer apart from the parameters passed.
@@ -40,6 +41,8 @@ const Login = (props) => {
   // 'inValid' from beginning itself, making the input form 'red' on UI.
   const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: undefined});
   const [passwordState, dispatchPassword] = useReducer(passswordReducer, { value: '', isValid: undefined});
+
+  const authCtx = useContext(AuthContext);
 
   // object de-structuring. i.e. emailIsValid = emailState.isValid
   const { isValid:emailIsValid } = emailState;
@@ -97,7 +100,7 @@ const Login = (props) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    authCtx.onLogin(emailState.value, passwordState.value);
   };
 
   return (
