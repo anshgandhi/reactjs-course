@@ -1,34 +1,35 @@
-import React, { useState, useEffect, useReducer, useContext } from 'react';
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
-import Card from '../UI/Card/Card';
-import classes from './Login.module.css';
-import Button from '../UI/Button/Button';
-import AuthContext from '../../store/auth-context';
+import Card from "../UI/Card/Card";
+import classes from "./Login.module.css";
+import Button from "../UI/Button/Button";
+import Input from "../UI/Input/Input";
+import AuthContext from "../../store/auth-context";
 
-// we can create this outside the Component scope, because we will not be accessing 
+// we can create this outside the Component scope, because we will not be accessing
 // any value inside the Reducer apart from the parameters passed.
 const emailReducer = (state, action) => {
   // ReactJS makes sure that 'state' contains the last known value, guaranteed by ReactJS.
-  if (action.type === 'USER_INPUT'){
-    return {value: action.val, isValid: action.val.includes('@')};
-  };
-  if (action.type === 'INPUT_BLUR'){
+  if (action.type === "USER_INPUT") {
+    return { value: action.val, isValid: action.val.includes("@") };
+  }
+  if (action.type === "INPUT_BLUR") {
     // for 'INPUT_BLUR' the 'action' only has 'type' defined and 'val' is not defined.
-    return {value: state.value, isValid: state.value.includes('@')};
-  };
-  return { value: '', isValid: false};
+    return { value: state.value, isValid: state.value.includes("@") };
+  }
+  return { value: "", isValid: false };
 };
 
 const passswordReducer = (state, action) => {
-  if (action.type === 'USER_INPUT'){
-    return {value: action.val, isValid: action.val.trim().length > 6};
+  if (action.type === "USER_INPUT") {
+    return { value: action.val, isValid: action.val.trim().length > 6 };
   }
-  if (action.type === 'INPUT_BLUR'){
+  if (action.type === "INPUT_BLUR") {
     // for 'INPUT_BLUR' the 'action' only has 'type' defined and 'val' is not defined.
-    return {value: state.value, isValid: state.value.trim().length > 6};
-  };
-  return { value: '', isValid: false};
-}
+    return { value: state.value, isValid: state.value.trim().length > 6 };
+  }
+  return { value: "", isValid: false };
+};
 
 const Login = (props) => {
   // const [enteredEmail, setEnteredEmail] = useState('');
@@ -37,25 +38,29 @@ const Login = (props) => {
   // const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
-  // the reason for 'isValid' being 'undefined' is because, otherwise the email is set 
+  // the reason for 'isValid' being 'undefined' is because, otherwise the email is set
   // 'inValid' from beginning itself, making the input form 'red' on UI.
-  const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: undefined});
-  const [passwordState, dispatchPassword] = useReducer(passswordReducer, { value: '', isValid: undefined});
+  const [emailState, dispatchEmail] = useReducer(emailReducer, {
+    value: "",
+    isValid: undefined,
+  });
+  const [passwordState, dispatchPassword] = useReducer(passswordReducer, {
+    value: "",
+    isValid: undefined,
+  });
 
   const authCtx = useContext(AuthContext);
 
   // object de-structuring. i.e. emailIsValid = emailState.isValid
-  const { isValid:emailIsValid } = emailState;
-  const { isValid:passwordIsValid } = passwordState;
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
 
   // enabling 'useEffect' will make sure we do not check form validity for every change.
   // if the field is already valid do not check for Form validity again.
   useEffect(() => {
     const identifier = setTimeout(() => {
       console.log("checking form validity... ");
-      setFormIsValid(
-        emailState.isValid && passwordState.isValid
-      );
+      setFormIsValid(emailState.isValid && passwordState.isValid);
     }, 500);
 
     // 'debouncing', this returned function is called a cleanup function.
@@ -67,13 +72,13 @@ const Login = (props) => {
       // otherwise we end up getting too many events that are just delayed by 500 ms.
       clearTimeout(identifier);
     };
-  }, [emailState.isValid, passwordState.isValid])
+  }, [emailState.isValid, passwordState.isValid]);
 
   const emailChangeHandler = (event) => {
     // we've passed 'action' to 'dispatchEmail'
     // 'dispatchEmail' calling 'emailReducer'.
     // once 'dispatchEmail' runs, the state would be updated.
-    dispatchEmail({type: 'USER_INPUT', val: event.target.value})
+    dispatchEmail({ type: "USER_INPUT", val: event.target.value });
 
     // setFormIsValid(
     //   passwordState.isValid && emailState.isValid
@@ -82,7 +87,7 @@ const Login = (props) => {
 
   const passwordChangeHandler = (event) => {
     // setEnteredPassword(event.target.value);
-    dispatchPassword({type: "USER_INPUT", val: event.target.value})
+    dispatchPassword({ type: "USER_INPUT", val: event.target.value });
 
     // setFormIsValid(
     //   passwordState.isValid && emailState.isValid
@@ -90,11 +95,11 @@ const Login = (props) => {
   };
 
   const validateEmailHandler = () => {
-    dispatchEmail({type: 'INPUT_BLUR'});
+    dispatchEmail({ type: "INPUT_BLUR" });
   };
 
   const validatePasswordHandler = () => {
-    dispatchPassword({type: 'INPUT_BLUR'});
+    dispatchPassword({ type: "INPUT_BLUR" });
     // setPasswordIsValid(enteredPassword.trim().length > 6);
   };
 
@@ -106,34 +111,24 @@ const Login = (props) => {
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
-        <div
-          className={`${classes.control} ${
-            emailState.isValid === false ? classes.invalid : ''
-          }`}
-        >
-          <label htmlFor="email">E-Mail</label>
-          <input
-            type="email"
-            id="email"
-            value={emailState.value}
-            onChange={emailChangeHandler}
-            onBlur={validateEmailHandler}
-          />
-        </div>
-        <div
-          className={`${classes.control} ${
-            passwordState.isValid === false ? classes.invalid : ''
-          }`}
-        >
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={passwordState.value}
-            onChange={passwordChangeHandler}
-            onBlur={validatePasswordHandler}
-          />
-        </div>
+        <Input
+          type="email"
+          id="email"
+          label="E-Mail"
+          isValid={emailState.isValid}
+          value={emailState.value}
+          onChange={emailChangeHandler}
+          onBlur={validateEmailHandler}
+        ></Input>
+        <Input
+          type="password"
+          id="password"
+          label="Password"
+          isValid={passwordState.isValid}
+          value={passwordState.value}
+          onChange={passwordChangeHandler}
+          onBlur={validatePasswordHandler}
+        ></Input>
         <div className={classes.actions}>
           <Button type="submit" className={classes.btn} disabled={!formIsValid}>
             Login
