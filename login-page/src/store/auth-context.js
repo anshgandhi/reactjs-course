@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 
+// Whenever this Context changes the Components that are using this 
+// Context through 'useContext' are automatically re-evaluated.
 const AuthContext = React.createContext({
   isLoggedIn: false,
   onLogout: () => {},
