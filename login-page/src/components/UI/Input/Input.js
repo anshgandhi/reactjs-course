@@ -2,6 +2,7 @@ import React, { useEffect, useImperativeHandle } from "react";
 
 import classes from "./Input.module.css";
 
+// React.forwardRef is used to pass 'ref' to custom components.
 const Input = React.forwardRef((props, ref) => {
   const inputRef = useRef();
 
