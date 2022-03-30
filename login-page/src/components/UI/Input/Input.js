@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle } from "react";
+import React, { useRef, useImperativeHandle } from "react";
 
 import classes from "./Input.module.css";
 
